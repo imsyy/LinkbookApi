@@ -128,6 +128,12 @@ categoriesRouter.put("/:id", async (ctx) => {
     }
     // 检测父级分类id是否存在
     if (parent_id !== null) {
+      if (parent_id === parseInt(id)) {
+        // 检查parent_id是否等于该分类的id
+        ctx.body = { code: 400, message: "不能将分类设置为自身的父级分类" };
+        ctx.status = 400;
+        return false;
+      }
       const [parentRows] = await ctx.db.query(
         "SELECT * FROM categories WHERE id=?",
         [parent_id]
